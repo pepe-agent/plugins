@@ -1,6 +1,6 @@
 {
   "name": "github",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GitHub tools: search issues and pull requests, read one with its comments, read a file or list a folder, open an issue and comment.",
   "provides": ["tool:github_search", "tool:github_get_issue", "tool:github_get_file", "tool:github_create_issue", "tool:github_comment"],
   "files": ["github.exs"],

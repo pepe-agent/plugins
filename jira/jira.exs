@@ -109,7 +109,10 @@ defmodule Pepe.Plugins.Jira.Client do
           url: settings.base <> "/rest/api/3" <> path,
           auth: {:basic, "#{settings.email}:#{settings.token}"},
           headers: [{"accept", "application/json"}],
-          receive_timeout: 20_000
+          receive_timeout: 20_000,
+          # A rate limit is told to the agent at once (the message says how long to wait). Left to
+          # the HTTP client, it would sleep for the whole Retry-After, three times, inside the turn.
+          retry: false
         ],
         opts
       )

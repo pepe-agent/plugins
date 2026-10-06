@@ -1,0 +1,11 @@
+{
+  "name": "notion",
+  "version": "0.1.0",
+  "description": "Notion tools: search, read a page, list a database's rows, create a page and add text to one.",
+  "provides": ["tool:notion_search", "tool:notion_get_page", "tool:notion_query_database", "tool:notion_create_page", "tool:notion_append"],
+  "files": ["notion.exs"],
+  "config": [
+    {"key": "token", "label": "Integration token", "type": "secret", "hint": "The internal integration secret, from notion.so/profile/integrations. Write it as ${ENV_VAR} to keep it out of the settings file. The integration only sees the pages shared with it."},
+    {"key": "writes", "label": "Allow writing", "type": "select", "options": ["no", "yes"], "hint": "No means read only: creating pages and adding text are refused. Even with yes, it can only write where the integration was given access."}
+  ]
+}

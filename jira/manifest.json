@@ -1,6 +1,6 @@
 {
   "name": "jira",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Jira Cloud tools: search with JQL, read an issue with its comments, create, comment and move issues through the workflow.",
   "provides": ["tool:jira_search", "tool:jira_get_issue", "tool:jira_create_issue", "tool:jira_comment", "tool:jira_transition"],
   "files": ["jira.exs"],
