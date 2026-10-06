@@ -30,7 +30,7 @@ Só **Jira Cloud** (API REST v3). Jira Server e Data Center autenticam de outro 
    | Account e-mail | O e-mail da conta dona do token |
    | API token | O token, escrito como `${JIRA_API_TOKEN}`, com o valor real no ambiente do servidor do Pepe, para ele nunca ficar no arquivo de configuração |
    | Default project key | Opcional. Como `CNSUP`. Vale quando um card novo não diz o projeto |
-   | Projects the agent may change | Opcional. Como `CNSUP, OPS`. Veja *Mantenha seguro* |
+   | Projects the agent may change | Necessário para criar, comentar ou mover cards. Como `CNSUP, OPS`, ou `*` para qualquer um. Vazio significa só leitura. Veja *Mantenha seguro* |
 
    As mesmas configurações podem vir do ambiente: `JIRA_SITE`, `JIRA_EMAIL`, `JIRA_API_TOKEN`, `JIRA_PROJECT`, `JIRA_ALLOWED_PROJECTS`.
 4. **Dê as ferramentas a um agente.** Ele só tem as que você listar:
@@ -38,14 +38,14 @@ Só **Jira Cloud** (API REST v3). Jira Server e Data Center autenticam de outro 
    ```bash
    pepe agent tools meu-agente --add jira_search,jira_get_issue,jira_create_issue,jira_comment,jira_transition
    ```
-5. **Teste.** Peça ao agente, em qualquer canal: *"liste os cards abertos do projeto CNSUP"*. Devem voltar chaves e títulos. Depois: *"abra o CNSUP-1"*.
+5. **Teste.** Peça ao agente, em qualquer canal: *"liste os cards abertos do projeto CNSUP"*. Devem voltar chaves e títulos. Depois: *"abra o CNSUP-1"*. Para testar a escrita, liste antes um projeto em *Projects the agent may change*.
 
 Se algo estiver errado, a ferramenta diz o quê: o Jira não aceitou o e-mail e o token (confira o e-mail e se o token está válido), o card não existe ou a conta não o enxerga, ou o Jira recusou um campo (a mensagem nomeia o campo).
 
 ## Mantenha seguro
 
 - **Toda ferramenta pergunta antes de rodar**, a não ser que você a liste no `auto_approve` do agente. Uma divisão sensata é pré-aprovar as duas que só leem (`jira_search`, `jira_get_issue`) e deixar as três que escrevem perguntando.
-- **Limite onde ele pode escrever.** Preencha *Projects the agent may change* e criar, comentar e mover são recusados em qualquer outro projeto. Ler não tem limite.
+- **Escrever fica desligado até você dizer onde.** Com *Projects the agent may change* vazio, o plugin só lê: criar, comentar e mover são recusados antes de qualquer chamada. Liste os projetos (`CNSUP, OPS`) para permitir ali, ou `*` para permitir todos. Ler nunca é limitado por isso.
 - **O que volta do Jira foi escrito por quem abriu o card**, então chega ao modelo marcado como texto citado, nunca como instrução. Não dê a um agente que lê chamados de clientes mais ferramentas do que ele precisa.
 - Use uma **conta dedicada** para o token (um usuário de serviço), e não a de uma pessoa, para ver o que ele fez e revogar sem afetar ninguém.
 

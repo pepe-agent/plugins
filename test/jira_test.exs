@@ -101,7 +101,13 @@ defmodule Pepe.Plugins.JiraTest do
     {:ok, {_addr, port}} = ThousandIsland.listener_info(server)
 
     Application.put_env(:pepe_plugins, :plugin_config, %{
-      "jira" => %{"site" => "http://127.0.0.1:#{port}", "email" => "me@example.com", "api_token" => "tok", "default_project" => "CNSUP"}
+      "jira" => %{
+        "site" => "http://127.0.0.1:#{port}",
+        "email" => "me@example.com",
+        "api_token" => "tok",
+        "default_project" => "CNSUP",
+        "allowed_projects" => "CNSUP"
+      }
     })
 
     on_exit(fn -> Application.delete_env(:pepe_plugins, :plugin_config) end)
@@ -208,6 +214,29 @@ defmodule Pepe.Plugins.JiraTest do
     end
   end
 
+  describe "writing is off until the projects are listed" do
+    setup do
+      config = Application.get_env(:pepe_plugins, :plugin_config)
+      Application.put_env(:pepe_plugins, :plugin_config, update_in(config, ["jira"], &Map.delete(&1, "allowed_projects")))
+      :ok
+    end
+
+    test "with no list, every write is refused before any request, and reading still works" do
+      assert {:error, msg} = JiraComment.run(%{"key" => "CNSUP-1", "comment" => "x"}, %{})
+      assert msg =~ "Writing to Jira is off"
+      assert {:error, _} = JiraCreateIssue.run(%{"summary" => "x"}, %{})
+      assert {:error, _} = JiraTransition.run(%{"key" => "CNSUP-1", "to" => "Done"}, %{})
+      refute_received {:request, _, _, _, _, _}
+      assert {:ok, _} = JiraSearch.run(%{"jql" => "project = CNSUP"}, %{})
+    end
+
+    test "a star lets it write anywhere" do
+      config = Application.get_env(:pepe_plugins, :plugin_config)
+      Application.put_env(:pepe_plugins, :plugin_config, put_in(config, ["jira", "allowed_projects"], "*"))
+      assert {:ok, _} = JiraComment.run(%{"key" => "CNSUP-1", "comment" => "ok"}, %{})
+    end
+  end
+
   describe "the project allowlist" do
     setup do
       config = Application.get_env(:pepe_plugins, :plugin_config)
@@ -233,6 +262,12 @@ defmodule Pepe.Plugins.JiraTest do
   end
 
   describe "when Jira says no" do
+    setup do
+      config = Application.get_env(:pepe_plugins, :plugin_config)
+      Application.put_env(:pepe_plugins, :plugin_config, put_in(config, ["jira", "allowed_projects"], "*"))
+      :ok
+    end
+
     test "a missing issue" do
       assert {:error, msg} = JiraGetIssue.run(%{"key" => "NOPE-1"}, %{})
       assert msg =~ "could not find it"

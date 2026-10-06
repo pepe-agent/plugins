@@ -9,6 +9,6 @@
     {"key": "email", "label": "Account e-mail", "type": "text", "hint": "The e-mail of the Atlassian account the API token belongs to."},
     {"key": "api_token", "label": "API token", "type": "secret", "hint": "Create one at id.atlassian.com/manage-profile/security/api-tokens. Write it as ${ENV_VAR} to keep it out of the settings file."},
     {"key": "default_project", "label": "Default project key", "type": "text", "hint": "Optional. Like CNSUP. Used when a new issue names no project."},
-    {"key": "allowed_projects", "label": "Projects the agent may change", "type": "text", "hint": "Optional, comma separated keys, like CNSUP, OPS. When set, creating, commenting and moving issues is refused anywhere else. Searching and reading are not limited."}
+    {"key": "allowed_projects", "label": "Projects the agent may change", "type": "text", "hint": "Required to create, comment or move issues; empty means read only. Comma separated keys, like CNSUP, OPS, or * for any project. Searching and reading are never limited by it."}
   ]
 }

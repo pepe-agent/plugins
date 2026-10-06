@@ -12,7 +12,7 @@
 #   * email            / JIRA_EMAIL
 #   * api_token        / JIRA_API_TOKEN
 #   * default_project  / JIRA_PROJECT          project key used when a create names none
-#   * allowed_projects / JIRA_ALLOWED_PROJECTS comma separated keys the agent may WRITE to
+#   * allowed_projects / JIRA_ALLOWED_PROJECTS comma separated keys the agent may WRITE to (* for any); empty = read only
 #
 # Jira Cloud only (REST API v3). Jira Server / Data Center authenticates differently.
 
@@ -44,10 +44,10 @@ defmodule Pepe.Plugins.Jira.Client do
   @doc "The project key a create falls back to, or nil."
   def default_project, do: setting("default_project", "JIRA_PROJECT")
 
-  @doc "The project keys the agent may write to, or `:any` when none were listed."
+  @doc "The project keys the agent may write to (`*` for any), or `nil` when none were listed."
   def allowed_projects do
     case setting("allowed_projects", "JIRA_ALLOWED_PROJECTS") do
-      nil -> :any
+      nil -> nil
       list -> list |> String.split([",", " "], trim: true) |> Enum.map(&String.upcase/1)
     end
   end
@@ -77,16 +77,22 @@ defmodule Pepe.Plugins.Jira.Client do
     if Regex.match?(@key_re, key), do: {:ok, key}, else: {:error, "#{inspect(value)} is not a Jira issue key (like CNSUP-123)."}
   end
 
-  @doc "May the agent write to the project this key (or project key) belongs to?"
+  @doc """
+  May the agent write to the project this key (or project key) belongs to? Writing is off until
+  the operator lists the projects it may change (`*` for any), so a plugin that was just installed
+  can read but never change anything by accident.
+  """
   def writable?(key_or_project) do
     project = key_or_project |> to_string() |> String.upcase() |> String.split("-") |> hd()
 
     case allowed_projects() do
-      :any ->
-        :ok
+      nil ->
+        {:error, "Writing to Jira is off. List the projects this agent may change (or *) under Plugins -> Configure."}
 
       list ->
-        if project in list, do: :ok, else: {:error, "This agent may not change project #{project}. Allowed: #{Enum.join(list, ", ")}."}
+        if "*" in list or project in list,
+          do: :ok,
+          else: {:error, "This agent may not change project #{project}. Allowed: #{Enum.join(list, ", ")}."}
     end
   end
 

@@ -1,0 +1,13 @@
+{
+  "name": "github",
+  "version": "0.1.0",
+  "description": "GitHub tools: search issues and pull requests, read one with its comments, read a file or list a folder, open an issue and comment.",
+  "provides": ["tool:github_search", "tool:github_get_issue", "tool:github_get_file", "tool:github_create_issue", "tool:github_comment"],
+  "files": ["github.exs"],
+  "config": [
+    {"key": "token", "label": "Access token", "type": "secret", "hint": "A fine-grained personal access token, created at github.com/settings/personal-access-tokens. Write it as ${ENV_VAR} to keep it out of the settings file."},
+    {"key": "default_repo", "label": "Default repository", "type": "text", "hint": "Optional. Like owner/name. Used when a call names no repository."},
+    {"key": "allowed_repos", "label": "Repositories the agent may change", "type": "text", "hint": "Required to open issues or comment; empty means read only. Comma separated, like owner/name or owner/*, or * for any repository. Searching and reading are never limited by it."},
+    {"key": "api_url", "label": "API address", "type": "text", "hint": "Only for GitHub Enterprise Server, like https://git.example.com/api/v3. Leave empty for github.com."}
+  ]
+}
