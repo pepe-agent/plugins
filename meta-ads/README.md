@@ -38,34 +38,46 @@ pepe plugin install @jhonathas/meta-ads
 | `meta_ads_set_status` | Pauses, archives, deletes, or turns ON |
 | `meta_ads_duplicate` | Copies a campaign, ad set or ad (the copy is PAUSED) |
 
-## What you need
+## What you need before starting
 
-- A **Meta developer** account and an **app** (<https://developers.facebook.com>), with the **Marketing API** product.
-- An **ad account**, and a **Facebook Page** the ads run as (and optionally the linked Instagram account).
-- An **access token** with `ads_read` to read, plus `ads_management` to create or change. The most durable way is a **System User** in Business Manager, assigned the ad account and Page: its token does not expire. Meta's own documentation describes the steps; check them against the screens you see, since Meta changes them often.
+- A **Meta Business portfolio** (Business Manager, <https://business.facebook.com>) that owns, or has access to, your **ad account** and your **Facebook Page**. The ad account needs a working payment method before anything can run.
+- A **Meta developer** account (<https://developers.facebook.com>) and an **app** there.
+- Optional: the **Instagram** account linked to the Page, if the ads should also run as that profile.
 
-## Set it up
+## Set it up (about 20 to 30 minutes, once)
 
-In the Pepe dashboard open **Plugins**, find **meta-ads** and choose **Configure**:
+Meta changes its screens and permission names often. Treat these steps as a map and check them against Meta's own Marketing API documentation (<https://developers.facebook.com/docs/marketing-api/get-started>).
 
-| Field | What to put |
-|---|---|
-| Access token | Written as `${META_ADS_ACCESS_TOKEN}`, with the real value in the Pepe server's environment |
-| Ad account id | The default account (digits). Optional |
-| Facebook Page id | The Page the ads are published as. Needed to create ads |
-| Instagram account id | Optional. To show the Instagram profile on the ads |
-| Allow creating | `no` (the default) is read only. `yes` lets the agent create and change things, always PAUSED |
-| Highest daily budget | The most a daily budget may be, in whole units like `50`. Required to write any budget. A lifetime budget may be at most this times its days |
-| Allow turning on | `no` (the default): the agent can never start spending. `yes` lets it turn on things whose budgets are within the limit |
-| Graph API version | Optional, like `v23.0` |
+1. **Create an app.** In <https://developers.facebook.com/apps> choose **Create app**, pick the use case about **advertising and promoting** (or the Business type), link it to your business portfolio, and add the **Marketing API** product.
+2. **Create a System User.** In **Business Settings → Users → System users**, add one (give it the **Admin** role). A System User is a robot account: its token does not expire and does not depend on a person staying logged in.
+3. **Give it your assets.** Select the System User, choose **Add assets**, and assign your **ad account** (full control) and your **Facebook Page**. Without the Page, creating ads fails.
+4. **Generate the token.** On the System User choose **Generate new token**, pick your app, and tick **`ads_read`** and **`ads_management`**. Copy the token at once: Meta shows it only one time. For read only use, `ads_read` alone is enough.
+5. **Find your ad account id.** In Ads Manager open **Settings**: the number under *Account overview* is it. Use only the digits (for example `1234567890`), not the `act_` prefix.
+6. **Fill in the plugin.** In the Pepe dashboard open **Plugins**, find **meta-ads** and choose **Configure**:
 
-The same settings can come from the environment: `META_ADS_ACCESS_TOKEN`, `META_ADS_ACCOUNT_ID`, `META_ADS_MAX_DAILY_BUDGET`, and the others in the same style.
+   | Field | What to put |
+   |---|---|
+   | Access token | The token, written as `${META_ADS_ACCESS_TOKEN}` with the real value in the Pepe server's environment, so it never sits in the settings file |
+   | Ad account id | The number from step 5. Optional, but it saves repeating it |
+   | Facebook Page id | Leave empty for now (see step 8) |
+   | Instagram account id | Leave empty for now (see step 8) |
+   | Allow creating | `no` (the default) is read only. `yes` lets the agent create and change things, always PAUSED |
+   | Highest daily budget | The most a daily budget may be, in whole units like `50`. Required to write any budget. A lifetime budget may be at most this times its days |
+   | Allow turning on | `no` (the default): the agent can never start spending. `yes` lets it turn on things whose budgets are within the limit |
+   | Graph API version | Optional, like `v23.0` |
 
-Then give the tools to an agent, reading first:
+   The same settings can come from the environment: `META_ADS_ACCESS_TOKEN`, `META_ADS_ACCOUNT_ID`, `META_ADS_MAX_DAILY_BUDGET`, and the others in the same style.
+7. **Give the tools to an agent, reading first:**
 
-```bash
-pepe agent tools my-agent --add meta_ads_accounts,meta_ads_campaigns,meta_ads_adsets,meta_ads_ads,meta_ads_insights
-```
+   ```bash
+   pepe agent tools my-agent --add meta_ads_accounts,meta_ads_pages,meta_ads_campaigns,meta_ads_adsets,meta_ads_ads,meta_ads_insights
+   ```
+
+   Ask: *"list my ad accounts"* and *"how did my campaigns do in the last 7 days?"*
+8. **Let the plugin find the Page and Instagram ids.** Ask the agent: *"show my Pages and Instagram accounts"* (`meta_ads_pages`). Copy the Page id, and the Instagram id of the profile you want, into the two empty fields of step 6.
+9. **Only then turn writing on.** Set *Allow creating* to `yes`, set a small *Highest daily budget*, add the create tools to the agent, and ask for a draft. It is created PAUSED: open the link it gives you in Ads Manager and review it. Turn *Allow turning on* to `yes` only when you trust the flow; until then you switch drafts on yourself in Ads Manager.
+
+If something is wrong the tool says what: the token expired or lacks a permission, the Page or ad account is not assigned to the System User, the account has no payment method, or Meta refused the ad (its own message is passed on).
 
 ## Keep it safe (this plugin can spend real money)
 

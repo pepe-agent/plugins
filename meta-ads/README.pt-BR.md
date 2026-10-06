@@ -38,34 +38,46 @@ pepe plugin install @jhonathas/meta-ads
 | `meta_ads_set_status` | Pausa, arquiva, apaga ou LIGA |
 | `meta_ads_duplicate` | Copia uma campanha, conjunto ou anúncio (a cópia fica PAUSADA) |
 
-## O que você precisa
+## O que você precisa antes de começar
 
-- Uma conta de **desenvolvedor da Meta** e um **app** (<https://developers.facebook.com>), com o produto **API de Marketing**.
-- Uma **conta de anúncio** e uma **Página do Facebook** pela qual os anúncios são publicados (e, opcionalmente, a conta do Instagram ligada).
-- Um **token de acesso** com `ads_read` para ler, mais `ads_management` para criar ou alterar. O jeito mais durável é um **Usuário do sistema** no Business Manager, com a conta de anúncio e a Página atribuídas: o token dele não expira. A documentação da Meta descreve os passos; confira com as telas que você vê, pois a Meta as muda com frequência.
+- Um **portfólio empresarial da Meta** (Business Manager, <https://business.facebook.com>) dono da sua **conta de anúncio** e da sua **Página do Facebook**, ou com acesso a elas. A conta de anúncio precisa de uma forma de pagamento funcionando antes de qualquer coisa rodar.
+- Uma conta de **desenvolvedor da Meta** (<https://developers.facebook.com>) e um **app** nela.
+- Opcional: a conta do **Instagram** ligada à Página, se os anúncios também devem sair com esse perfil.
 
-## Configure
+## Configure (uns 20 a 30 minutos, uma vez)
 
-No painel do Pepe abra **Plugins**, ache **meta-ads** e escolha **Configure**:
+A Meta muda as telas e os nomes das permissões com frequência. Use estes passos como um mapa e confira na documentação da API de Marketing da própria Meta (<https://developers.facebook.com/docs/marketing-api/get-started>).
 
-| Campo | O que colocar |
-|---|---|
-| Access token | Escrito como `${META_ADS_ACCESS_TOKEN}`, com o valor real no ambiente do servidor do Pepe |
-| Ad account id | A conta padrão (só dígitos). Opcional |
-| Facebook Page id | A Página pela qual os anúncios saem. Necessário para criar anúncios |
-| Instagram account id | Opcional. Para mostrar o perfil do Instagram nos anúncios |
-| Allow creating | `no` (padrão) é só leitura. `yes` deixa o agente criar e alterar, sempre PAUSADO |
-| Highest daily budget | O máximo de um orçamento diário, em unidades inteiras como `50`. Obrigatório para gravar qualquer orçamento. Um orçamento total pode ser no máximo isso vezes os dias |
-| Allow turning on | `no` (padrão): o agente nunca começa a gastar. `yes` deixa ligar o que tem orçamento dentro do limite |
-| Graph API version | Opcional, como `v23.0` |
+1. **Crie um app.** Em <https://developers.facebook.com/apps> escolha **Criar app**, selecione o caso de uso de **publicidade e promoção** (ou o tipo Business), ligue ao seu portfólio empresarial e adicione o produto **API de Marketing**.
+2. **Crie um Usuário do sistema.** Em **Configurações do negócio → Usuários → Usuários do sistema**, adicione um (com a função **Administrador**). É uma conta robô: o token dele não expira e não depende de uma pessoa continuar logada.
+3. **Dê os ativos a ele.** Selecione o Usuário do sistema, escolha **Adicionar ativos** e atribua a sua **conta de anúncio** (controle total) e a sua **Página do Facebook**. Sem a Página, criar anúncios falha.
+4. **Gere o token.** No Usuário do sistema escolha **Gerar novo token**, selecione o seu app e marque **`ads_read`** e **`ads_management`**. Copie o token na hora: a Meta mostra uma única vez. Para só ler, `ads_read` basta.
+5. **Ache o id da conta de anúncio.** No Gerenciador de Anúncios abra **Configurações**: o número em *Visão geral da conta* é ele. Use só os dígitos (por exemplo `1234567890`), sem o prefixo `act_`.
+6. **Preencha o plugin.** No painel do Pepe abra **Plugins**, ache **meta-ads** e escolha **Configure**:
 
-As mesmas configurações podem vir do ambiente: `META_ADS_ACCESS_TOKEN`, `META_ADS_ACCOUNT_ID`, `META_ADS_MAX_DAILY_BUDGET` e as demais no mesmo estilo.
+   | Campo | O que colocar |
+   |---|---|
+   | Access token | O token, escrito como `${META_ADS_ACCESS_TOKEN}` com o valor real no ambiente do servidor do Pepe, para nunca ficar no arquivo de configurações |
+   | Ad account id | O número do passo 5. Opcional, mas evita repetir |
+   | Facebook Page id | Deixe vazio por enquanto (veja o passo 8) |
+   | Instagram account id | Deixe vazio por enquanto (veja o passo 8) |
+   | Allow creating | `no` (padrão) é só leitura. `yes` deixa o agente criar e alterar, sempre PAUSADO |
+   | Highest daily budget | O máximo de um orçamento diário, em unidades inteiras como `50`. Obrigatório para gravar qualquer orçamento. Um orçamento total pode ser no máximo isso vezes os dias |
+   | Allow turning on | `no` (padrão): o agente nunca começa a gastar. `yes` deixa ligar o que tem orçamento dentro do limite |
+   | Graph API version | Opcional, como `v23.0` |
 
-Depois dê as ferramentas a um agente, começando pela leitura:
+   As mesmas configurações podem vir do ambiente: `META_ADS_ACCESS_TOKEN`, `META_ADS_ACCOUNT_ID`, `META_ADS_MAX_DAILY_BUDGET` e as demais no mesmo estilo.
+7. **Dê as ferramentas a um agente, começando pela leitura:**
 
-```bash
-pepe agent tools my-agent --add meta_ads_accounts,meta_ads_campaigns,meta_ads_adsets,meta_ads_ads,meta_ads_insights
-```
+   ```bash
+   pepe agent tools my-agent --add meta_ads_accounts,meta_ads_pages,meta_ads_campaigns,meta_ads_adsets,meta_ads_ads,meta_ads_insights
+   ```
+
+   Pergunte: *"liste minhas contas de anúncio"* e *"como foram minhas campanhas nos últimos 7 dias?"*
+8. **Deixe o plugin achar os ids da Página e do Instagram.** Peça ao agente: *"mostre minhas Páginas e contas do Instagram"* (`meta_ads_pages`). Copie o id da Página, e o do Instagram do perfil que quiser, para os dois campos vazios do passo 6.
+9. **Só então ligue a escrita.** Ponha *Allow creating* em `yes`, defina um *Highest daily budget* pequeno, adicione as ferramentas de criação ao agente e peça um rascunho. Ele nasce PAUSADO: abra o link que ele devolve no Gerenciador de Anúncios e revise. Só ponha *Allow turning on* em `yes` quando confiar no fluxo; até lá você liga os rascunhos sozinho no Gerenciador.
+
+Se algo estiver errado a ferramenta diz o quê: o token expirou ou falta uma permissão, a Página ou a conta de anúncio não foi atribuída ao Usuário do sistema, a conta não tem forma de pagamento, ou a Meta recusou o anúncio (a mensagem dela é repassada).
 
 ## Segurança (este plugin pode gastar dinheiro de verdade)
 

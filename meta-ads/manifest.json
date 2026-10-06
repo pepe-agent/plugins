@@ -1,6 +1,6 @@
 {
   "name": "meta-ads",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Meta Ads (Facebook and Instagram ads): read accounts, campaigns and results, find audiences, create campaigns, ad sets, creatives and ads (always paused), edit, pause, duplicate and turn on within a budget limit.",
   "provides": [
     "tool:meta_ads_accounts", "tool:meta_ads_campaigns", "tool:meta_ads_adsets", "tool:meta_ads_ads", "tool:meta_ads_insights",
