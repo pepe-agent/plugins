@@ -1,0 +1,23 @@
+#!/bin/sh
+# Pack one skill for PepeHub:  bin/pack-skill meta-ads-ab-test  ->  dist/meta-ads-ab-test-<version>.zip
+# The version comes from metadata.version in SKILL.md. SKILL.md sits at the ROOT of the archive.
+set -eu
+
+skill=${1:?usage: bin/pack-skill SKILL}
+root=$(cd "$(dirname "$0")/.." && pwd)
+dir="$root/skills/$skill"
+
+[ -f "$dir/SKILL.md" ] || { echo "$skill has no SKILL.md" >&2; exit 1; }
+
+version=$(sed -n 's/^[[:space:]]*version:[[:space:]]*"\{0,1\}\([0-9][^"]*\)"\{0,1\}[[:space:]]*$/\1/p' "$dir/SKILL.md" | head -n 1)
+[ -n "$version" ] || { echo "no metadata.version in $skill/SKILL.md" >&2; exit 1; }
+
+mkdir -p "$root/dist"
+out="$root/dist/$skill-$version.zip"
+
+rm -f "$out"
+# -X: no extra file attributes; SKILL.md at the root of the zip, the skill folder itself left out.
+(cd "$dir" && zip -q -r -X "$out" . -x '.DS_Store' '*/.DS_Store')
+
+echo "$out"
+unzip -Z1 "$out"
