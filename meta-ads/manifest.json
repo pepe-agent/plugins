@@ -1,0 +1,23 @@
+{
+  "name": "meta-ads",
+  "version": "0.1.0",
+  "description": "Meta Ads (Facebook and Instagram ads): read accounts, campaigns and results, find audiences, create campaigns, ad sets, creatives and ads (always paused), edit, pause, duplicate and turn on within a budget limit.",
+  "provides": [
+    "tool:meta_ads_accounts", "tool:meta_ads_campaigns", "tool:meta_ads_adsets", "tool:meta_ads_ads", "tool:meta_ads_insights",
+    "tool:meta_ads_get", "tool:meta_ads_search_targeting", "tool:meta_ads_estimate", "tool:meta_ads_audiences", "tool:meta_ads_pixels",
+    "tool:meta_ads_pages", "tool:meta_ads_preview", "tool:meta_ads_create_campaign", "tool:meta_ads_create_adset", "tool:meta_ads_upload_video",
+    "tool:meta_ads_create_creative", "tool:meta_ads_create_ad", "tool:meta_ads_create_draft", "tool:meta_ads_update", "tool:meta_ads_set_status",
+    "tool:meta_ads_duplicate", "tool:meta_ads_create_lookalike"
+  ],
+  "files": ["meta-ads.exs", "meta-ads-create.exs", "meta-ads-manage.exs"],
+  "config": [
+    {"key": "access_token", "label": "Access token", "type": "secret", "hint": "A Meta access token with ads_read (and ads_management to create or change). A system user's token does not expire. Write it as ${ENV_VAR} to keep it out of the settings file."},
+    {"key": "ad_account_id", "label": "Ad account id", "type": "text", "hint": "Optional. The ad account used when a call names none: digits, like 1234567890 (Ads Manager shows it)."},
+    {"key": "page_id", "label": "Facebook Page id", "type": "text", "hint": "The Page the ads are published as (digits). Needed to create ads."},
+    {"key": "instagram_user_id", "label": "Instagram account id", "type": "text", "hint": "Optional. The Instagram account the ads also run as (digits). Meta Ads and Instagram placements need one for the ads to show the Instagram profile."},
+    {"key": "writes", "label": "Allow creating", "type": "select", "options": ["no", "yes"], "hint": "No means read only. With yes, the agent can create and change campaigns, ad sets, creatives and ads, but everything it creates is PAUSED. Each action still asks for approval unless you pre-approve it."},
+    {"key": "max_daily_budget", "label": "Highest daily budget", "type": "text", "hint": "Required to write a budget: the most a daily budget may be, in whole units of the account's currency, like 50. A lifetime budget may be at most this times the days it runs."},
+    {"key": "activate", "label": "Allow turning on", "type": "select", "options": ["no", "yes"], "hint": "No (the default) means the agent can never start spending: a person turns drafts on in Ads Manager. With yes, it may turn on campaigns, ad sets and ads whose budgets are within the highest daily budget. This spends real money."},
+    {"key": "api_version", "label": "Graph API version", "type": "text", "hint": "Optional. Like v23.0. Leave empty for the plugin's default."}
+  ]
+}

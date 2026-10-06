@@ -1,0 +1,13 @@
+{
+  "name": "instagram",
+  "version": "0.1.0",
+  "description": "Instagram tools for a Business or Creator account: see the account and its recent posts, and publish a photo, a carousel or a reel.",
+  "provides": ["tool:instagram_account", "tool:instagram_recent_posts", "tool:instagram_publish_photo", "tool:instagram_publish_carousel", "tool:instagram_publish_reel"],
+  "files": ["instagram.exs"],
+  "config": [
+    {"key": "access_token", "label": "Access token", "type": "secret", "hint": "A long-lived Meta access token with the instagram_basic and instagram_content_publish permissions. A system user's token does not expire. Write it as ${ENV_VAR} to keep it out of the settings file."},
+    {"key": "ig_user_id", "label": "Instagram account id", "type": "text", "hint": "The number that identifies the Instagram account (not the @name). Step by step in the README."},
+    {"key": "writes", "label": "Allow publishing", "type": "select", "options": ["no", "yes"], "hint": "No means read only: publishing is refused. With yes, the agent can publish posts that everyone sees, and each one still asks for approval unless you pre-approve it."},
+    {"key": "api_version", "label": "Graph API version", "type": "text", "hint": "Optional. Like v23.0. Leave empty for the plugin's default."}
+  ]
+}
