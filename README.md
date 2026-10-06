@@ -11,8 +11,9 @@ pepe plugin install @jhonathas/jira
 | [`jira`](jira/) | Jira Cloud: search, read, create, comment, move issues | ready to try |
 | [`github`](github/) | GitHub: search and read issues and pull requests, read repository files, open issues, comment | ready to try |
 | [`notion`](notion/) | Notion: search, read pages, list database rows, create pages, add text | ready to try |
+| [`drive`](drive/) | Google Drive (read only): search files, read Docs, Sheets, Slides and text files | ready to try |
 
-More are planned: Google Drive, Zapier, Stripe (read only), Instagram publishing and Meta Ads reporting.
+More are planned: Zapier, Stripe (read only), Instagram publishing and Meta Ads reporting.
 
 Every plugin has a README with a step by step setup, the fields to fill in, how to test it and what to be careful with. The same text is what shows on the plugin's page on the hub.
 

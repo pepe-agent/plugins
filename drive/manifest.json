@@ -1,0 +1,10 @@
+{
+  "name": "drive",
+  "version": "0.1.0",
+  "description": "Google Drive tools (read only): search files and list a folder, and read a Doc, Sheet, Slides deck or text file as text.",
+  "provides": ["tool:drive_search", "tool:drive_get_file"],
+  "files": ["drive.exs"],
+  "config": [
+    {"key": "service_account", "label": "Service account key", "type": "secret", "hint": "The key file Google gives you for a service account: paste its JSON, or give the path to the file on the Pepe server, or write ${ENV_VAR}. Share the folders it should read with the account's e-mail. It sees only what is shared with it."}
+  ]
+}
