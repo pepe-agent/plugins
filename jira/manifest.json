@@ -1,0 +1,14 @@
+{
+  "name": "jira",
+  "version": "0.1.0",
+  "description": "Jira Cloud tools: search with JQL, read an issue with its comments, create, comment and move issues through the workflow.",
+  "provides": ["tool:jira_search", "tool:jira_get_issue", "tool:jira_create_issue", "tool:jira_comment", "tool:jira_transition"],
+  "files": ["jira.exs"],
+  "config": [
+    {"key": "site", "label": "Jira site", "type": "text", "hint": "Your Jira address without https://, like yourcompany.atlassian.net."},
+    {"key": "email", "label": "Account e-mail", "type": "text", "hint": "The e-mail of the Atlassian account the API token belongs to."},
+    {"key": "api_token", "label": "API token", "type": "secret", "hint": "Create one at id.atlassian.com/manage-profile/security/api-tokens. Write it as ${ENV_VAR} to keep it out of the settings file."},
+    {"key": "default_project", "label": "Default project key", "type": "text", "hint": "Optional. Like CNSUP. Used when a new issue names no project."},
+    {"key": "allowed_projects", "label": "Projects the agent may change", "type": "text", "hint": "Optional, comma separated keys, like CNSUP, OPS. When set, creating, commenting and moving issues is refused anywhere else. Searching and reading are not limited."}
+  ]
+}
