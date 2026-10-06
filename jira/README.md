@@ -55,3 +55,7 @@ If something is wrong the tool says what: Jira did not accept the e-mail and tok
 - Descriptions and comments are Jira's rich text; the plugin reads them as plain text and writes plain text back (blank lines make paragraphs). Formatting such as bold, tables and mentions is not produced on write.
 - Search returns up to 50 issues per call.
 - Attachments are listed as `[attachment]`, not downloaded.
+
+---
+
+**Em português:** [README.pt-BR.md](https://github.com/pepe-agent/plugins/blob/main/jira/README.pt-BR.md) (também na aba **Files** desta página).

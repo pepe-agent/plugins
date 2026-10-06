@@ -55,3 +55,7 @@ Se algo estiver errado, a ferramenta diz o quê: o Jira não aceitou o e-mail e 
 - Descrições e comentários são o texto rico do Jira; o plugin lê como texto simples e escreve texto simples de volta (linha em branco vira parágrafo). Formatações como negrito, tabelas e menções não são geradas ao escrever.
 - A busca devolve até 50 cards por chamada.
 - Anexos aparecem como `[attachment]`, sem baixar.
+
+---
+
+**In English:** [README.md](https://github.com/pepe-agent/plugins/blob/main/jira/README.md)

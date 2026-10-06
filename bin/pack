@@ -1,0 +1,27 @@
+#!/bin/sh
+# Pack one plugin for PepeHub:  bin/pack jira   ->  dist/jira-<version>.tgz
+#
+# PepeHub reads a plugin's README.md only when it sits at the ROOT of the archive, so the files
+# go in without the plugin's folder in front of them (manifest.json, jira.exs, README.md...).
+# The Pepe installer finds the package either way; the hub does not.
+set -eu
+
+plugin=${1:?usage: bin/pack PLUGIN}
+root=$(cd "$(dirname "$0")/.." && pwd)
+dir="$root/$plugin"
+
+[ -f "$dir/manifest.json" ] || { echo "$plugin has no manifest.json" >&2; exit 1; }
+
+version=$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$dir/manifest.json" | head -n 1)
+[ -n "$version" ] || { echo "no version in $plugin/manifest.json" >&2; exit 1; }
+
+mkdir -p "$root/dist"
+out="$root/dist/$plugin-$version.tgz"
+
+# COPYFILE_DISABLE: macOS tar would otherwise add ._ files next to every file.
+files=$(cd "$dir" && find . -type f ! -name '.DS_Store' | sed 's|^\./||' | sort)
+# shellcheck disable=SC2086
+COPYFILE_DISABLE=1 tar -czf "$out" -C "$dir" $files
+
+echo "$out"
+tar -tzf "$out"

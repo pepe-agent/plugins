@@ -42,6 +42,14 @@ What a plugin must hold to:
 - **No secret in the code.** Settings come from the plugin's configuration, falling back to environment variables.
 - **A clear message for every failure** (bad credentials, not found, refused field), written for the model to read.
 
+## Packing and publishing
+
+```bash
+bin/pack jira        # writes dist/jira-<version>.tgz
+```
+
+The script puts the plugin's files at the **root** of the archive. That matters: PepeHub shows a plugin's README only when `README.md` is at the root of the archive (the Pepe installer finds the package either way, so a wrongly packed plugin installs fine and just has an empty README tab). Publish the result from the PepeHub site, or through its API with a login from the GitHub device flow.
+
 ## License
 
 MIT
