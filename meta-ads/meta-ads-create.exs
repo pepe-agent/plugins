@@ -1,6 +1,6 @@
 # Meta Ads: the tools that CREATE. Everything made here is PAUSED: nothing is shown to anyone and
 # nothing is spent until it is turned on (by a person in Ads Manager, or by meta_ads_set_status when
-# the operator allowed that). See meta-ads.exs for the settings and the shared client.
+# the operator allowed that). See meta-ads-core.exs for the settings and the shared client.
 
 defmodule Pepe.Plugins.MetaAdsBuild do
   @moduledoc """

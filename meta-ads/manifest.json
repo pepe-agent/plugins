@@ -1,6 +1,6 @@
 {
   "name": "meta-ads",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Meta Ads (Facebook and Instagram ads): read accounts, campaigns and results, find audiences, create campaigns, ad sets, creatives and ads (always paused), edit, pause, duplicate and turn on within a budget limit.",
   "provides": [
     "tool:meta_ads_accounts", "tool:meta_ads_campaigns", "tool:meta_ads_adsets", "tool:meta_ads_ads", "tool:meta_ads_insights",
@@ -9,7 +9,7 @@
     "tool:meta_ads_create_creative", "tool:meta_ads_create_ad", "tool:meta_ads_create_draft", "tool:meta_ads_update", "tool:meta_ads_set_status",
     "tool:meta_ads_duplicate", "tool:meta_ads_create_lookalike"
   ],
-  "files": ["meta-ads.exs", "meta-ads-create.exs", "meta-ads-manage.exs"],
+  "files": ["meta-ads-core.exs", "meta-ads-create.exs", "meta-ads-manage.exs"],
   "config": [
     {"key": "access_token", "label": "Access token", "type": "secret", "hint": "A Meta access token with ads_read (and ads_management to create or change). A system user's token does not expire. Write it as ${ENV_VAR} to keep it out of the settings file."},
     {"key": "ad_account_id", "label": "Ad account id", "type": "text", "hint": "Optional. The ad account used when a call names none: digits, like 1234567890 (Ads Manager shows it)."},

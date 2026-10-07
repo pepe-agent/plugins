@@ -1,6 +1,6 @@
 # Meta Ads: the tools that CHANGE what exists: edit, pause, archive, delete, duplicate, build a lookalike
 # audience, and turn things on. Turning on is the one that starts spending, so it has its own switch
-# in the settings and re-checks every budget against the operator's ceiling. See meta-ads.exs.
+# in the settings and re-checks every budget against the operator's ceiling. See meta-ads-core.exs.
 
 defmodule Pepe.Plugins.MetaAdsUpdate do
   @behaviour Pepe.Tools.Tool
