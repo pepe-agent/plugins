@@ -47,6 +47,14 @@ What a plugin must hold to:
 - **No secret in the code.** Settings come from the plugin's configuration, falling back to environment variables.
 - **A clear message for every failure** (bad credentials, not found, refused field), written for the model to read.
 
+## Skills
+
+Skills (the [Agent Skills](https://agentskills.io/specification) format) live under `skills/`. Pack one with `bin/pack-skill NAME`.
+
+| Skill | What it does |
+|---|---|
+| [`canva-template-image`](skills/canva-template-image/) | Fills a prepared Canva brand template (title, text, background image) through the Canva Connect API and exports a PNG, JPG or PDF. Needs Canva Pro, Teams or Enterprise; setup in `references/SETUP.md`. Creates and exports only, never publishes. |
+
 ## Packing and publishing
 
 ```bash
